@@ -1,0 +1,9 @@
+
+//is_data_ready = 1;
+counter++;;
+//puts(buf);
+for(std::vector<unsigned char>::iterator it=ret->begin(); it<ret->end();it++)
+{
+
+    //std::cout<<*it;
+}
