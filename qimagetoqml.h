@@ -15,44 +15,45 @@ class QImageToQml : public QQuickPaintedItem
     Q_OBJECT
     Q_PROPERTY(QImage image READ image WRITE setImage NOTIFY imageChanged)
 
-
-public:
-    QImageToQml();
-
-    Q_INVOKABLE void setImage(const QImage &image);
-    QImage image() const;
-
-    // reimplemented function
-    void paint(QPainter *painter);
-
 signals:
     void imageChanged();
 private:
     QImage current_image;
 
+public:
+    QImageToQml()
+    {
+    }
+    ~QImageToQml() {}
+
+    Q_INVOKABLE void setImage(QImage image)
+    {
+        this->current_image = image;
+        update();
+    }
+
+    QImage image() const {
+        return current_image;
+    }
+
+    // reimplemented function
+    void paint(QPainter *painter)
+    {
+
+#ifdef PUT_IMG_TO_CENTER_INSTEAD_OF_0_0
+        QRectF bounding_rect = boundingRect();
+        QImage scaled = this->current_image.scaledToHeight(bounding_rect.height());
+        QPointF center = bounding_rect.center() - scaled.rect().center();
+        if(center.x() < 0)
+            center.setX(0);
+        if(center.y() < 0)
+            center.setY(0);
+        painter->drawImage(center, scaled);
+#else
+        painter->drawImage(QPoint(0,0),this->image);
+#endif
+    }
 };
 
-void ImageItem::setImage(const QImage &image)
-{
-    this->current_image = image;
-    update();
-}
 
-void QImageToQml::paint(QPainter *painter)
-{
-#ifdef PUT_IMG_TO_CENTER_INSTEAD_OF_0_0
-    QRectF bounding_rect = boundingRect();
-    QImage scaled = this->current_image.scaledToHeight(bounding_rect.height());
-    QPointF center = bounding_rect.center() - scaled.rect().center();
-
-    if(center.x() < 0)
-        center.setX(0);
-    if(center.y() < 0)
-        center.setY(0);
-   painter->drawImage(center, scaled);
-#else
-   painter->drawImage(QPoint(0,0),this->image);
-#endif
-}
-
-#endif // QIMAGETOQML_H
+#endif // QIMAG0ETOQML_H

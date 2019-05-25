@@ -1,33 +1,29 @@
 import QtQuick 2.10
 import QtQuick.Controls 2.3
+import "."
+import QImageToQml 1.0
 
 ApplicationWindow {
     visible: true
     width: 640
     height: 480
-    title: qsTr("Tabs")
+    title: qsTr("UDP Video Stream")
 
-    SwipeView {
-        id: swipeView
-        anchors.fill: parent
-        currentIndex: tabBar.currentIndex
+    QImageToQml {
+        id: testImg
+        width: 320
+        height: 240
+        anchors.centerIn: parent
+    }
 
-        Page1Form {
-        }
 
-        Page2Form {
+    Connections
+    {
+        target: udpReceiver
+        onLiveImgChanged:
+        {
+            testImg.setImage(img);
         }
     }
 
-    footer: TabBar {
-        id: tabBar
-        currentIndex: swipeView.currentIndex
-
-        TabButton {
-            text: qsTr("Page 1")
-        }
-        TabButton {
-            text: qsTr("Page 2")
-        }
-    }
 }
